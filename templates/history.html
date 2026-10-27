@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}QR Studio — History{% endblock %}
+
+{% block content %}
+<section class="history">
+  <header class="history-head">
+    <h1>History</h1>
+    <p>{{ entries|length }} saved code{{ '' if entries|length == 1 else 's' }}. Newest first; the last 50 are kept.</p>
+  </header>
+
+  {% if entries %}
+  <ol class="record-list">
+    {% for qr in entries %}
+    <li class="record">
+      <a class="record-thumb" href="{{ url_for('download', qr_id=qr.id) }}" title="Download QR-{{ '%04d' % qr.id }}">
+        <img src="{{ url_for('qr_image', qr_id=qr.id) }}"
+          alt="QR code for {{ (qr.label or qr.content)[:120] }}"
+          loading="lazy" width="112" height="112">
+      </a>
+
+      <div class="record-body">
+        <p class="record-name">{{ qr.label or ('QR-' ~ '%04d' % qr.id) }}</p>
+        <p class="record-content" title="{{ qr.content }}">{{ qr.content }}</p>
+        <p class="record-meta">
+          <span class="chip"><i class="chip-swatch" style="background: {{ qr.foreground }}"></i>{{ qr.foreground }}</span>
+          <span class="chip"><i class="chip-swatch" style="background: {{ qr.background }}"></i>{{ qr.background }}</span>
+          <span>{{ qr.size }} px</span>
+          <span class="record-time">{{ qr.created_at|dt }}</span>
+        </p>
+      </div>
+
+      <div class="record-actions">
+        <a class="small-button" href="{{ url_for('download', qr_id=qr.id) }}">Download</a>
+        <button class="small-button" type="button" data-copy="{{ qr.content }}">Copy</button>
+        <form method="post" action="{{ url_for('delete', qr_id=qr.id) }}"
+          onsubmit="return confirm('Delete this QR code?');">
+          <button class="small-button danger" type="submit">Delete</button>
+        </form>
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <div class="empty">
+    <p class="empty-title">No codes saved yet.</p>
+    <p><a href="{{ url_for('index') }}">Generate your first QR code</a> and it will show up here.</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

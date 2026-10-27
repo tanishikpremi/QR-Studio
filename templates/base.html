@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-theme="{{ theme }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}QR Studio{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="masthead">
+    <a class="brand" href="{{ url_for('index') }}">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2.5" y="2.5" width="7" height="7"/>
+        <rect x="14.5" y="2.5" width="7" height="7"/>
+        <rect x="2.5" y="14.5" width="7" height="7"/>
+        <rect x="14.5" y="14.5" width="3" height="3" fill="currentColor" stroke="none"/>
+        <rect x="19" y="14.5" width="2.5" height="2.5" fill="currentColor" stroke="none"/>
+        <rect x="14.5" y="19" width="2.5" height="2.5" fill="currentColor" stroke="none"/>
+        <rect x="19" y="19" width="2.5" height="2.5" fill="currentColor" stroke="none"/>
+      </svg>
+      <span class="brand-name">QR Studio</span>
+      <span class="brand-tag">local QR workbench</span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}aria-current="page"{% endif %}>Generator</a>
+      <a href="{{ url_for('history') }}" {% if request.endpoint == 'history' %}aria-current="page"{% endif %}>History</a>
+    </nav>
+
+    <form method="post" action="{{ url_for('settings') }}" class="theme-form">
+      <input type="hidden" name="theme" value="{{ other_theme }}">
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <button type="submit" class="theme-toggle">
+        {% if theme == 'terminal' %}Win98 mode{% else %}Terminal mode{% endif %}
+      </button>
+    </form>
+  </header>
+
+  <main class="shell">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <p>Generated on this machine. History lives in a local SQLite file.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body>
+</html>

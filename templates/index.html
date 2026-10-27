@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}QR Studio — Generator{% endblock %}
+
+{% block content %}
+<section class="workbench">
+  <form class="panel controls" id="generator" autocomplete="off">
+    <div class="panel-head">
+      <h1>New QR code</h1>
+      <span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span>
+      <p class="panel-sub">Type a link or plain text. The preview refreshes as you go.</p>
+    </div>
+
+    <div class="panel-body">
+      <label class="field">
+        <span class="field-label">Content</span>
+        <textarea id="content" name="content" rows="3" maxlength="1000"
+          placeholder="https://example.com or any text" required></textarea>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Label <span class="hint">optional, keeps history tidy</span></span>
+        <input id="label" name="label" type="text" maxlength="80" placeholder="e.g. Portfolio link">
+      </label>
+
+      <fieldset class="colors">
+        <legend class="field-label">Colors</legend>
+        <label class="color-field">
+          <input class="color-input" type="color" id="foreground" name="foreground" value="#1a1408">
+          <span class="color-meta">
+            <span>Foreground</span>
+            <code id="foreground-hex">#1a1408</code>
+          </span>
+        </label>
+        <label class="color-field">
+          <input class="color-input" type="color" id="background" name="background" value="#f6f1e3">
+          <span class="color-meta">
+            <span>Background</span>
+            <code id="background-hex">#f6f1e3</code>
+          </span>
+        </label>
+      </fieldset>
+
+      <div class="field size-field">
+        <label class="field-label" for="size">Size <output class="output" id="size-value" for="size">300 px</output></label>
+        <input type="range" id="size" name="size" min="100" max="600" step="10" value="300">
+        <div class="range-scale"><span>100</span><span>600 px</span></div>
+      </div>
+
+      <button class="primary" type="submit">Generate QR</button>
+      <p class="contrast-note" id="contrast-note" hidden>Low contrast: this code may not scan. Try a darker foreground or a lighter background.</p>
+    </div>
+  </form>
+
+  <section class="panel preview" aria-label="QR preview">
+    <div class="panel-head">
+      <h1>Preview</h1>
+      <span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span>
+      <p class="panel-sub">Rendered in memory. The download is a clean PNG.</p>
+    </div>
+
+    <div class="panel-body">
+      <div class="screen-frame">
+        <div class="preview-stage" id="preview-stage" data-state="idle">
+          <svg class="qr-ghost" viewBox="0 0 29 29" aria-hidden="true" shape-rendering="crispEdges">
+            <rect x="1" y="1" width="5" height="5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="3" y="3" width="1" height="1" fill="currentColor"/>
+            <rect x="23" y="1" width="5" height="5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="25" y="3" width="1" height="1" fill="currentColor"/>
+            <rect x="1" y="23" width="5" height="5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="3" y="25" width="1" height="1" fill="currentColor"/>
+            <rect x="10" y="2" width="2" height="2" fill="currentColor"/>
+            <rect x="14" y="6" width="2" height="2" fill="currentColor"/>
+            <rect x="9" y="10" width="3" height="2" fill="currentColor"/>
+            <rect x="17" y="11" width="2" height="2" fill="currentColor"/>
+            <rect x="12" y="14" width="2" height="2" fill="currentColor"/>
+            <rect x="21" y="17" width="2" height="2" fill="currentColor"/>
+            <rect x="6" y="18" width="2" height="3" fill="currentColor"/>
+            <rect x="16" y="19" width="3" height="2" fill="currentColor"/>
+            <rect x="11" y="22" width="2" height="2" fill="currentColor"/>
+            <rect x="21" y="23" width="3" height="3" fill="currentColor"/>
+            <rect x="26" y="25" width="2" height="2" fill="currentColor"/>
+            <rect x="8" y="26" width="2" height="2" fill="currentColor"/>
+          </svg>
+          <img id="preview-image" alt="" width="300" height="300">
+        </div>
+      </div>
+
+      <div class="preview-meta">
+        <p class="status" id="status" role="status" data-tone="idle">Waiting for content.</p>
+        <div class="actions">
+          <a class="button primary" id="download" href="#" role="button" aria-disabled="true" tabindex="-1">Download PNG</a>
+          <button class="button secondary" type="button" id="copy" disabled>Copy text</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+{% endblock %}
